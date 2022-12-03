@@ -7,4 +7,12 @@
 	ISNUMBER(HEX2DEC(MID(A1,10,2))),
 	ISNUMBER(HEX2DEC(MID(A1,13,2))),
 	ISNUMBER(HEX2DEC(MID(A1,16,2))),
-	(LEN(A1)-LEN(SUBSTITUTE(A1,":",""))=5))
+	(LEN(A1)-LEN(SUBSTITUTE(A1,":",""))=5)
+)
+
+This formula makes sure that there are six pairs of hexadecimal digits between
+five colons.  It does this by extracting each pair by character position, and
+converting them from hex to decimal, and making sure it's a number.  Then it
+makes sure it has five colons by removing all colons from the data and
+comparing the size to ensure it has been reduced by 5, the total number of
+colons.
