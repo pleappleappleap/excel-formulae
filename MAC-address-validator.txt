@@ -16,3 +16,8 @@ converting them from hex to decimal, and making sure it's a number.  Then it
 makes sure it has five colons by removing all colons from the data and
 comparing the size to ensure it has been reduced by 5, the total number of
 colons.
+
+It's quite useful to add this formula as a custom data validator to cells that
+should contain MAC addresses.  This formula has been written to be short enough
+to fit within the maximum length of the data validator formula field.
+
