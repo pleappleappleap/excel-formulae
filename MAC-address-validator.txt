@@ -25,8 +25,17 @@ Dynamic Excel:
 
 =LET(mac,FILTERXML("<t><s>"&SUBSTITUTE(D6,":","</s><s>")&"</s></t>","//s"),COUNTA(FILTER(mac,ISNUMBER(HEX2DEC(mac)))))=6
 
-=LET(mac, FILTERXML("<t><s>"&SUBSTITUTE(D6,":","</s><s>")&"</s></t>","//s"),
-  COUNTA(FILTER(mac,ISNUMBER(HEX2DEC(mac)))))=6
+=LET(mac,
+  FILTERXML("<t><s>" &
+    SUBSTITUTE(D6,":","</s><s>") &
+    "</s></t>",
+    "//s"),
+  COUNTA(
+    FILTER(
+      mac,
+      ISNUMBER(
+        HEX2DEC(mac)))))
+          =6
 
 This will only work with Excel 365 after 2021, but it's much simpler.  It uses
 two new features.  First, the LET function allows temporary variables to be set
