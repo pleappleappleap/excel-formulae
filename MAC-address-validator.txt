@@ -1,3 +1,5 @@
+Classic Excel:
+
 =AND(ISNUMBER(HEX2DEC(MID(A1,1,2))),ISNUMBER(HEX2DEC(MID(A1,4,2))),ISNUMBER(HEX2DEC(MID(A1,7,2))),ISNUMBER(HEX2DEC(MID(A1,10,2))),ISNUMBER(HEX2DEC(MID(A1,13,2))),ISNUMBER(HEX2DEC(MID(A1,16,2))),(LEN(A1)-LEN(SUBSTITUTE(A1,":",""))=5))
 
 =AND(
@@ -17,7 +19,24 @@ makes sure it has five colons by removing all colons from the data and
 comparing the size to ensure it has been reduced by 5, the total number of
 colons.
 
-It's quite useful to add this formula as a custom data validator to cells that
-should contain MAC addresses.  This formula has been written to be short enough
-to fit within the maximum length of the data validator formula field.
+********************************************************************************
+
+Dynamic Excel:
+
+=LET(mac,FILTERXML("<t><s>"&SUBSTITUTE(D6,":","</s><s>")&"</s></t>","//s"),COUNTA(FILTER(mac,ISNUMBER(HEX2DEC(mac)))))=6
+
+=LET(mac, FILTERXML("<t><s>"&SUBSTITUTE(D6,":","</s><s>")&"</s></t>","//s"),
+  COUNTA(FILTER(mac,ISNUMBER(HEX2DEC(mac)))))=6
+
+This will only work with Excel 365 after 2021, but it's much simpler.  It uses
+two new features.  First, the LET function allows temporary variables to be set
+in formulae.  Then, we use the dynamic array function FILTER to drop out any
+values that aren't hexadecimal.  Finally, we count the values.
+
+********************************************************************************
+
+It's quite useful to add either of these formulae as a custom data validator to
+cells that should contain MAC addresses.  Both of these formulae have been
+written to be short enough to fit within the maximum length of the data
+validator formula field.
 
