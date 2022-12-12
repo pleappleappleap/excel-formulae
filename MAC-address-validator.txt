@@ -1,6 +1,6 @@
 Classic Excel:
 
-=AND(ISNUMBER(HEX2DEC(MID(A1,1,2))),ISNUMBER(HEX2DEC(MID(A1,4,2))),ISNUMBER(HEX2DEC(MID(A1,7,2))),ISNUMBER(HEX2DEC(MID(A1,10,2))),ISNUMBER(HEX2DEC(MID(A1,13,2))),ISNUMBER(HEX2DEC(MID(A1,16,2))),(LEN(A1)-LEN(SUBSTITUTE(A1,":",""))=5))
+=AND(ISNUMBER(HEX2DEC(MID(A1,1,2))),ISNUMBER(HEX2DEC(MID(A1,4,2))),ISNUMBER(HEX2DEC(MID(A1,7,2))),ISNUMBER(HEX2DEC(MID(A1,10,2))),ISNUMBER(HEX2DEC(MID(A1,13,2))),ISNUMBER(HEX2DEC(MID(A1,16,2))),(LEN(A1)-LEN(SUBSTITUTE(A1,":",""))=5),LEN(A1)=17)
 
 =AND(
 	ISNUMBER(HEX2DEC(MID(A1,1,2))),
@@ -9,7 +9,8 @@ Classic Excel:
 	ISNUMBER(HEX2DEC(MID(A1,10,2))),
 	ISNUMBER(HEX2DEC(MID(A1,13,2))),
 	ISNUMBER(HEX2DEC(MID(A1,16,2))),
-	(LEN(A1)-LEN(SUBSTITUTE(A1,":",""))=5)
+	(LEN(A1)-LEN(SUBSTITUTE(A1,":",""))=5),
+  LEN(A1)=17
 )
 
 This formula makes sure that there are six pairs of hexadecimal digits between
@@ -17,30 +18,30 @@ five colons.  It does this by extracting each pair by character position, and
 converting them from hex to decimal, and making sure it's a number.  Then it
 makes sure it has five colons by removing all colons from the data and
 comparing the size to ensure it has been reduced by 5, the total number of
-colons.
+colons. Finally, we check the length of the data, which should always be 17.
 
 ********************************************************************************
 
 Dynamic Excel:
 
-=LET(mac,FILTERXML("<t><s>"&SUBSTITUTE(D6,":","</s><s>")&"</s></t>","//s"),COUNTA(FILTER(mac,ISNUMBER(HEX2DEC(mac)))))=6
+=AND(LET(mac,TEXTSPLIT(D6,":"),COUNTA(FILTER(mac,ISNUMBER(HEX2DEC(mac))))=6),LEN(D6)=17)
 
-=LET(mac,
-  FILTERXML("<t><s>" &
-    SUBSTITUTE(D6,":","</s><s>") &
-    "</s></t>",
-    "//s"),
-  COUNTA(
-    FILTER(
-      mac,
-      ISNUMBER(
-        HEX2DEC(mac)))))
-          =6
+=AND(
+  LET(mac,
+    TEXTSPLIT(A1,":"),
+    COUNTA(
+      FILTER(mac,ISNUMBER(HEX2DEC(mac))))
+    =6),
+  LEN(A1)=17
+)
 
-This will only work with Excel 365 after 2021, but it's much simpler.  It uses
-two new features.  First, the LET function allows temporary variables to be set
-in formulae.  Then, we use the dynamic array function FILTER to drop out any
-values that aren't hexadecimal.  Finally, we count the values.
+This will only work with Excel 365 after 2021, but it's much simpler.  First,
+we use the new LET function to assign a variable.  To this variable, we assign
+an array created with the new TEXTSPLIT function, using ":" as a delimiter.
+
+Then we use the new FILTER function to find all values which provide a valid
+number from the HEX2DEC function.  Next, we count the values, making sure
+there are 6.  Finally, we verify the length of the data is 17.
 
 ********************************************************************************
 
